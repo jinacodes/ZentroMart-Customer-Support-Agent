@@ -1,0 +1,55 @@
+{
+  "audio_file": "question4.wav",
+  "transcript": "can i return a shirt if i don't like it",
+  "response": "Hello! I am ZentroMart's AI customer support assistant. \n\nYes, you can return a shirt if you don't like it, as long as it is within the return window. \n\nHere are the details for returning a clothing item:\n* **Return Window:** You have 15 calendar days from the delivery date to return it.\n* **What you can do:** You can either request a return for a refund, or you can exchange it for a different size or colour (subject to stock availability). If the new size or colour is out of stock, a return and refund will be offered instead.",
+  "document_evidence": [
+    {
+      "file": "faq_general.md",
+      "doc_id": "FAQ-GEN",
+      "title": "Frequently asked questions",
+      "doc_type": "faq",
+      "section": "[FAQ-2] Can I return something I bought?",
+      "text": "Most items can be returned within the return window. Some items, like grocery, cannot be returned."
+    },
+    {
+      "file": "pol_cancellations.md",
+      "doc_id": "POL-CAN",
+      "title": "Cancellations policy",
+      "doc_type": "policy",
+      "section": "[CAN-2] After the order ships",
+      "text": "A shipped order cannot be cancelled. The customer can:\n- refuse the parcel at the door. For cash-on-delivery orders nothing is charged. For prepaid orders the refund follows REF-1 once the parcel returns to the warehouse; or\n- accept the delivery and return the item within its return window, if the category is returnable."
+    },
+    {
+      "file": "pol_damaged_wrong_missing.md",
+      "doc_id": "POL-DWM",
+      "title": "Damaged, wrong or missing items policy",
+      "doc_type": "policy",
+      "section": "[DWM-4] Reported after 48 hours",
+      "text": "Reports after 48 hours are handled as a normal return if the item is still within its return window. Otherwise the customer can use the brand or ZentroMart Assured warranty, if any."
+    },
+    {
+      "file": "pol_delivery_shipping.md",
+      "doc_id": "POL-DEL",
+      "title": "Delivery and shipping policy",
+      "doc_type": "policy",
+      "section": "[DEL-3] Delivery attempts",
+      "text": "The courier makes up to 3 delivery attempts. After a failed attempt the customer gets an SMS to reschedule. If the third attempt fails, the parcel is returned to the warehouse (return to origin, RTO) and REF-1 applies."
+    },
+    {
+      "file": "pol_returns_v4.md",
+      "doc_id": "POL-RET",
+      "title": "Returns policy",
+      "doc_type": "policy",
+      "section": "[RET-9] Exchanges",
+      "text": "Exchanges for a different size or colour are available on clothing and footwear within the return window, subject to stock. If the new size is out of stock, a return and refund is offered instead."
+    },
+    {
+      "file": "pol_returns_v4.md",
+      "doc_id": "POL-RET",
+      "title": "Returns policy",
+      "doc_type": "policy",
+      "section": "[RET-2] Return windows by category",
+      "text": "The return window starts on the **delivery date** and is counted in calendar days. The category of every product is listed in the `return_category` column of the product catalog.\n\n| Category | Return window | Catalog code |\n| --- | --- | --- |\n| Electronics and accessories | 7 days | `electronics` |\n| Clothing, footwear and bags | 15 days | `fashion` |\n| Home, kitchen and furniture | 10 days | `home_kitchen` |\n| Beauty and personal care (unopened, seal intact) | 7 days | `beauty_sealed` |\n| Books and stationery | 10 days | `books_media` |\n| Grocery, fresh and perishables | Not returnable | `grocery` |\n| Innerwear, lingerie and swimwear | Not returnable | `innerwear` |\n| Gift cards and digital codes | Not returnable | `digital` |"
+    }
+  ]
+}

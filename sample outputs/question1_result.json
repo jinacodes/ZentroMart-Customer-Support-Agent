@@ -1,0 +1,55 @@
+{
+  "audio_file": "question1.wav",
+  "transcript": "my product arrived damaged what should i do now",
+  "response": "Hello! I am ZentroMart's AI customer support assistant. \n\nIf your product arrived damaged, please follow these steps:\n\n1. **Safety Check:** If the product shows any safety risks (such as a swelling battery, burning smell, sparks, or heat), stop using it immediately. *(Note: If this applies, I will immediately connect you with a human agent).*\n2. **Deadline:** Report the damage within **48 hours of delivery**.\n3. **Required Evidence:** Provide photos of both the damaged item and its packaging.\n\n**Available Resolutions:**\nOnce verified, you will receive a free replacement or a full refund (including delivery fees), with no reverse pickup fee. \n\n*(Please note: If the damaged item is worth more than ₹10,000, I will need to create a ticket and hand your case over to our Priority Resolution team.)*",
+  "document_evidence": [
+    {
+      "file": "pol_damaged_wrong_missing.md",
+      "doc_id": "POL-DWM",
+      "title": "Damaged, wrong or missing items policy",
+      "doc_type": "policy",
+      "section": "[DWM-5] Safety issues",
+      "text": "If a product shows a safety risk, such as a swelling battery, burning smell, sparks or heat, the customer must stop using it immediately. The agent must hand over to a human at once."
+    },
+    {
+      "file": "pol_damaged_wrong_missing.md",
+      "doc_id": "POL-DWM",
+      "title": "Damaged, wrong or missing items policy",
+      "doc_type": "policy",
+      "section": "[DWM-1] Reporting window",
+      "text": "Report a damaged, defective, expired, wrong or missing item within **48 hours of delivery**, with photos of the item and the packaging. This applies to every category, including grocery and other non-returnable items."
+    },
+    {
+      "file": "pol_damaged_wrong_missing.md",
+      "doc_id": "POL-DWM",
+      "title": "Damaged, wrong or missing items policy",
+      "doc_type": "policy",
+      "section": "[DWM-2] Resolution",
+      "text": "After verification the customer gets a free replacement or a full refund, including delivery fees. No reverse pickup fee applies."
+    },
+    {
+      "file": "pol_damaged_wrong_missing.md",
+      "doc_id": "POL-DWM",
+      "title": "Damaged, wrong or missing items policy",
+      "doc_type": "policy",
+      "section": "[DWM-3] High-value items",
+      "text": "Claims for items worth more than ₹10,000 are handled by the Priority Resolution team. The support agent must create a ticket and hand over; the agent cannot approve these claims."
+    },
+    {
+      "file": "pol_damaged_wrong_missing.md",
+      "doc_id": "POL-DWM",
+      "title": "Damaged, wrong or missing items policy",
+      "doc_type": "policy",
+      "section": "[DWM-4] Reported after 48 hours",
+      "text": "Reports after 48 hours are handled as a normal return if the item is still within its return window. Otherwise the customer can use the brand or ZentroMart Assured warranty, if any."
+    },
+    {
+      "file": "agent_escalation_handoff.md",
+      "doc_id": "AGT-ESC",
+      "title": "Escalation and human handover",
+      "doc_type": "agent_guide",
+      "section": "[ESC-1] When to hand over to a human",
+      "text": "Hand over at once when any of these is true:\n\n1. **Damaged, defective or wrong item worth more than ₹10,000.**\n2. **Customer reports an order, payment or account activity they did not make.**\n3. **Customer mentions legal action, a consumer court or a police complaint.**\n4. **Third or later contact about the same issue within 7 days.**\n5. **Refund more than 3 business days past its maximum timeline.**\n6. **Customer asks for a human agent.**\n7. **Product safety risk such as a swelling battery, burning smell, sparks or injury.**\n\nFor the repeat-contact rule, use the `contacts_last_7_days` field returned by order lookup. It counts earlier contacts only, not the current one. Escalate when it is 2 or more."
+    }
+  ]
+}

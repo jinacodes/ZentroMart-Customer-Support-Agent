@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZentroMart | AI Support</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f5f3;
+            color: #20312c;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 760px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        header {
+            background: #173b35;
+            color: white;
+            padding: 20px 24px;
+        }
+
+        header h1 { margin: 0 0 5px; font-size: 23px; }
+        header p { margin: 0; color: #d1e7df; font-size: 14px; }
+
+        #chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .message { max-width: 88%; }
+        .user { align-self: flex-end; }
+        .assistant { align-self: flex-start; }
+
+        .bubble {
+            padding: 13px 16px;
+            border-radius: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .user .bubble {
+            background: #dcece5;
+            border-bottom-right-radius: 4px;
+        }
+
+        .assistant .bubble {
+            background: #f0f2f1;
+            border-bottom-left-radius: 4px;
+        }
+
+        .speaker {
+            border: none;
+            background: transparent;
+            color: #236c57;
+            padding: 8px 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .speaker:hover { text-decoration: underline; }
+
+        #status {
+            padding: 0 24px 10px;
+            color: #64736d;
+            font-size: 13px;
+        }
+
+        
+        .composer {
+            padding: 16px;
+            border-top: 1px solid #e3e9e5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+        }
+
+        #messageInput {
+            flex: 1;
+            min-width: 0;
+            height: 46px;
+            border: 1px solid #d4ddd7;
+            border-radius: 14px;
+            padding: 0 15px;
+            font-size: 15px;
+            outline-color: #236c57;
+        }
+
+        .icon-button {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d4ddd7;
+            border-radius: 14px;
+            background: #fff;
+            color: #173b35;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .icon-button svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        .icon-button:hover {
+            background: #f0f5f2;
+            border-color: #9bb9ac;
+        }
+
+        .mic-button.recording {
+            background: #fbe9e7;
+            border-color: #d66a5e;
+            color: #a83226;
+        }
+
+        .send-button {
+            background: #173b35;
+            border-color: #173b35;
+            color: #fff;
+        }
+
+        .send-button:hover {
+            background: #24574c;
+            border-color: #24574c;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: wait;
+        }
+
+        @media (max-width: 480px) {
+            #chat { padding: 16px; }
+            header { padding: 17px; }
+
+            .composer {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            #messageInput {
+                font-size: 14px;
+            }
+
+            .icon-button {
+                width: 42px;
+                height: 42px;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <main class="app">
+        <header>
+            <h1>ZentroMart</h1>
+            <p>AI Customer Support</p>
+        </header>
+
+        <section id="chat" aria-live="polite">
+            <div class="message assistant">
+                <div class="bubble">Hi! Welcome to ZentroMart. How can I help you today?</div>
+            </div>
+            </div>
+        </section>
+
+        <div id="status" role="status"></div>
+
+        
+        <form class="composer" id="chatForm">
+            <input id="messageInput" type="text"
+                placeholder="Ask about your order or a return..."
+                autocomplete="off" aria-label="Your question" required>
+
+            <button class="icon-button mic-button" id="micButton"
+                type="button" aria-label="Record a voice message"
+                title="Record a voice message">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="9" y="3" width="6" height="12" rx="3"
+                        fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0
+                        M12 18v3 M9 21h6"
+                        fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <button class="icon-button send-button" id="sendButton"
+                type="submit" aria-label="Send message" title="Send message">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 12 20 4 14 20 11 13 4 12Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linejoin="round" stroke-linecap="round"/>
+                    <path d="m11 13 9-9" fill="none"
+                        stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round"/>
+                </svg>
+            </button>
+        </form>
+
+    </main>
+
+    <script>
+        const chat = document.getElementById("chat");
+        const form = document.getElementById("chatForm");
+        const input = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+        const status = document.getElementById("status");
+        const micButton = document.getElementById("micButton");
+
+        function addMessage(text, role, audioUrl = null) {
+            const wrapper = document.createElement("div");
+            wrapper.className = `message ${role}`;
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.textContent = text;
+            wrapper.appendChild(bubble);
+
+            
+if (audioUrl) {
+    const audio = document.createElement("audio");
+    audio.src = audioUrl;
+    audio.preload = "none";
+
+    const speaker = document.createElement("button");
+    speaker.type = "button";
+    speaker.className = "speaker";
+    speaker.textContent = "🔊 Listen to reply";
+
+    speaker.addEventListener("click", async () => {
+        if (audio.paused) {
+            try {
+                await audio.play();
+                speaker.textContent = "⏹ Stop audio";
+            } catch {
+                status.textContent = "Couldn't play the audio. Please try again.";
+            }
+        } else {
+            audio.pause();
+            audio.currentTime = 0;
+            speaker.textContent = "🔊 Listen to reply";
+        }
+    });
+
+    audio.addEventListener("ended", () => {
+        speaker.textContent = "🔊 Listen to reply";
+    });
+
+    audio.addEventListener("pause", () => {
+        if (audio.currentTime === 0 || audio.ended) {
+            speaker.textContent = "🔊 Listen to reply";
+        }
+    });
+
+    wrapper.appendChild(speaker);
+    wrapper.appendChild(audio);
+}
+
+
+            chat.appendChild(wrapper);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, "user");
+            input.value = "";
+            sendButton.disabled = true;
+            status.textContent = "ZentroMart is thinking...";
+
+            try {
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Request failed.");
+                }
+
+                addMessage(data.reply, "assistant", data.audio_url);
+                status.textContent = "";
+            } catch (error) {
+                status.textContent = error.message || "Something went wrong.";
+            } finally {
+                sendButton.disabled = false;
+                input.focus();
+            }
+        });
+
+        
+let mediaRecorder = null;
+let recordedChunks = [];
+let micStream = null;
+
+fetch("/api/reset", {
+    method: "POST"
+}).catch(error => {
+    console.error("Could not reset conversation:", error);
+});
+
+micButton.addEventListener("click", async () => {
+    // Clicking again stops an active recording.
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        return;
+    }
+
+    if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        status.textContent = "Voice recording isn't supported by this browser.";
+        return;
+    }
+
+    try {
+        micStream = await navigator.mediaDevices.getUserMedia({
+            audio: true
+        });
+
+        recordedChunks = [];
+
+        const mimeTypes = [
+            "audio/webm;codecs=opus",
+            "audio/webm",
+            "audio/ogg;codecs=opus",
+            "audio/mp4"
+        ];
+
+        const supportedType = mimeTypes.find(
+            type => MediaRecorder.isTypeSupported(type)
+        );
+
+        mediaRecorder = supportedType
+            ? new MediaRecorder(micStream, { mimeType: supportedType })
+            : new MediaRecorder(micStream);
+
+        mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        
+mediaRecorder.onstop = async () => {
+    const blob = new Blob(recordedChunks, {
+        type: mediaRecorder.mimeType
+    });
+
+    if (micStream) {
+        micStream.getTracks().forEach(track => track.stop());
+        micStream = null;
+    }
+
+    micButton.classList.remove("recording");
+    micButton.title = "Record a voice message";
+    micButton.setAttribute("aria-label", "Record a voice message");
+
+    if (blob.size === 0) {
+        status.textContent = "No audio was recorded. Please try again.";
+        return;
+    }
+
+    const extension = blob.type.includes("ogg") ? "ogg"
+        : blob.type.includes("mp4") ? "mp4"
+        : blob.type.includes("wav") ? "wav"
+        : "webm";
+
+    const formData = new FormData();
+    formData.append("audio", blob, `recording.${extension}`);
+
+    micButton.disabled = true;
+    status.textContent = "Transcribing your question...";
+
+    try {
+        const response = await fetch("/api/transcribe", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Transcription failed.");
+        }
+
+        // Put the recognized words in the input for review.
+        input.value = data.transcript;
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+
+        status.textContent = "Review your question, then press Send.";
+    } catch (error) {
+        status.textContent =
+            error.message || "Couldn't transcribe your recording.";
+    } finally {
+        micButton.disabled = false;
+    }
+};
+
+
+        mediaRecorder.start();
+
+        micButton.classList.add("recording");
+        micButton.title = "Stop recording";
+        micButton.setAttribute("aria-label", "Stop recording");
+        status.textContent = "Recording... Click the microphone again to stop.";
+    } catch (error) {
+        if (micStream) {
+            micStream.getTracks().forEach(track => track.stop());
+            micStream = null;
+        }
+
+        status.textContent = error.name === "NotAllowedError"
+            ? "Microphone access was denied. Allow it in your browser settings."
+            : "Couldn't start recording. Please try again.";
+    }
+});
+
+    </script>
+</body>
+</html>
