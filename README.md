@@ -4,6 +4,17 @@ ZentroMart is an AI-powered customer support assistant developed as a capstone p
 
 The project uses Google's Gemini API for generating responses, a knowledge base for answering company-related questions, Gnani.ai for speech processing, and Flask for a browser-based interface.
 
+## Repository
+
+**Public GitHub Repository:** https://github.com/jinacodes/ZentroMart-Customer-Support-Agent
+
+Clone the repository using the commands below:
+
+```bash
+git clone https://github.com/jinacodes/ZentroMart-Customer-Support-Agent.git
+cd ZentroMart-Customer-Support-Agent
+```
+
 ## Features
 
 - **Basic LLM responses:** Answer customer questions using Google's Gemini API.
