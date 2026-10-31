@@ -106,6 +106,9 @@ class ZentroMartAgent:
             "my order is late",
             "my order is delayed",
             "when is it expected to arrive",
+            "about my order",
+            "regarding my order",
+            "details about my order",
         )
 
         if (
@@ -223,6 +226,9 @@ class ZentroMartAgent:
             "where is my parcel",
             "where is my package",
             "when is it expected to arrive",
+            "when will i receive it",
+            "when will i get it",
+            "when is my order arriving",
         )
 
         if any(term in lower for term in tracking_terms):
@@ -361,7 +367,7 @@ class ZentroMartAgent:
             )
 
         # Use RAG for other policy questions and follow-ups.
-        answer, sources = ask_with_rag(text)
+        answer, sources = ask_with_rag(text, self.history[-6:])
 
         self.last_sources = sources
 

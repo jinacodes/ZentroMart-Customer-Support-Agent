@@ -12,8 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 KB_DIR = ROOT / "kb"
 
 client = genai.Client(
-    api_key=os.environ["GEMINI_API_KEY"],
-    http_options=types.HttpOptions(timeout=30000),
+    api_key=os.environ["GEMINI_API_KEY"]
 )
 
 
@@ -150,10 +149,72 @@ def retrieve(question, sections, top_k=4):
     return [section for score, section in scored[:max(top_k, 6)]]
 
 
-def ask_with_rag(question):
+def fallback_answer(question, matches):
+    """Provide the most relevant document section when Gemini is unavailable."""
+
+    question_words = set(tokenize(question))
+
+    stop_words = {
+        "the", "a", "an", "is", "are", "i", "my",
+        "do", "does", "what", "how", "can", "to",
+        "for", "of", "and", "in", "on", "it", "you",
+        "we", "me", "please", "tell", "if", "using",
+        "paid", "about",
+    }
+
+    useful_words = question_words - stop_words
+
+    scored_sections = []
+
+    for section in matches:
+        title_words = set(tokenize(
+            section["title"] + " " + section["section"]
+        ))
+
+        content_words = set(tokenize(section["text"]))
+
+        title_matches = len(useful_words & title_words)
+        content_matches = len(useful_words & content_words)
+
+        score = (title_matches * 3) + content_matches
+
+        if section.get("doc_type") == "policy":
+            score += 2
+
+        if score > 0:
+            scored_sections.append((score, section))
+
+    if not scored_sections:
+        return "I don't know based on the company documents."
+
+    scored_sections.sort(key=lambda item: item[0], reverse=True)
+
+    best_section = scored_sections[0][1]
+
+    return (
+        "Gemini is temporarily unavailable. "
+        "Here's the most relevant information from ZentroMart's documents:\n\n"
+        f"[{best_section['doc_id']}] {best_section['section']}\n"
+        f"{best_section['text']}"
+    )
+    
+
+def ask_with_rag(question, history=None):
     """Retrieve evidence, then ask Gemini to answer from that evidence."""
     sections = read_documents()
-    matches = retrieve(question, sections)
+    history = history or []
+
+    history_text = "\n".join(
+        f"{role.capitalize()}: {message}"
+        for role, message in history[-6:]
+    )
+
+    contextual_question = " ".join(
+        message for role, message in history[-6:]
+        if role == "user"
+    ) + " " + question
+
+    matches = retrieve(contextual_question, sections)
 
 
     if not matches:
@@ -192,18 +253,32 @@ Use simple language and avoid irrelevant policy details.
 EVIDENCE:
 {evidence}
 
-CUSTOMER QUESTION:
+RECENT CONVERSATION:
+{history_text}
+
+CURRENT CUSTOMER QUESTION:
 {question}
 """
 
-    response = client.models.generate_content(
-        model="gemini-3.5-flash-lite",
-        contents=prompt,
-    )
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.8-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                thinking_config=types.ThinkingConfig(
+                    thinking_level="low"
+                )
+            )
+        )
 
-    answer = response.text or (
-        "I couldn't generate a response just now. Please try again."
-    )
+        answer = response.text or (
+            "I couldn't generate a response just now. Please try again."
+        )
+
+    except Exception as error:
+        print(f"Gemini API error: {error}")
+
+        answer = fallback_answer(question, matches)
 
     return answer, matches
 
