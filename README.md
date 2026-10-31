@@ -6,7 +6,8 @@ The project uses Google's Gemini API for generating responses, a knowledge base 
 
 ## Repository
 
-**Public GitHub Repository:** https://github.com/jinacodes/ZentroMart-Customer-Support-Agent
+**Public GitHub Repository:**  
+https://github.com/jinacodes/ZentroMart-Customer-Support-Agent
 
 Clone the repository using the commands below:
 
@@ -69,14 +70,30 @@ python -m pip install -r requirements.txt
 
 ### 3. Configure environment variables
 
-Create a local `.env` file in the project root. Add the required API keys:
+Create a local `.env` file by copying the provided `.env.example` file.
+
+**On Windows PowerShell:**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+**On macOS/Linux:**
+
+```bash
+cp .env.example .env
+```
+
+Open the newly created `.env` file and add your own API credentials:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 GNANI_API_KEY=your_gnani_api_key_here
+REFERENCE_DATE=2026-10-20
+DEFAULT_LANGUAGE=en-IN
 ```
 
-Use your own API keys locally. Never commit real credentials to GitHub. The `.env.example` file provides a template.
+Replace the placeholder API key values with your actual credentials. Keep your `.env` file private and never upload it to GitHub. The `.env.example` file is provided as a configuration template.
 
 ## Running the Project
 
@@ -100,9 +117,9 @@ python src/step3_conversation.py
 
 Type a question when prompted. Enter `exit` or `quit` to end the conversation.
 
-### Audio conversion
+### Audio Conversion
 
-Place `.m4a` recordings in the `input_audio/` folder and run:
+Create an `input_audio` folder in the project root if it does not already exist. Place your `.m4a` recordings inside it and run:
 
 ```bash
 python convert_audio.py
@@ -110,7 +127,7 @@ python convert_audio.py
 
 Converted WAV files are saved in `input_audio_wav/`.
 
-### Voice pipeline
+### Voice Pipeline
 
 Run the pipeline on a folder containing `.wav` or `.mp3` files:
 
@@ -120,7 +137,7 @@ python run.py input_audio_wav
 
 The pipeline saves JSON results in `outputs/results/` and generated voice replies in `outputs/voice_replies/`.
 
-### Web interface
+### Web Interface
 
 Run:
 
